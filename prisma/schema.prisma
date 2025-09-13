@@ -1,0 +1,103 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Device {
+    id String @id 
+    status Status
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    telemetry TelemetryRecord[]
+    subscription Subscription[]
+
+    @@map("devices")
+}
+
+
+model TelemetryRecord {
+    id String @id @default(uuid())
+    deviceId String 
+    metric String 
+    value String
+    status DeviceHealthStatus
+    ts DateTime 
+    eventId String @unique
+
+    device Device @relation(fields: [deviceId], references: [id],onDelete: Cascade)
+
+    @@map("telemetry_records")
+}
+
+
+model Subscription {
+    id String @id @default(uuid())
+    deviceId String
+    planId String
+    startDate DateTime @default(now())
+    endDate DateTime
+    status SubscriptionStatus @default(ACTIVE)
+    providerRef String
+    updatedAt DateTime @updatedAt 
+
+    device Device @relation(fields: [deviceId], references: [id],onDelete: Cascade)
+
+    @@map("subscriptions")
+}
+
+model Client {
+    id String @id @default(uuid())
+    name String
+    apiKey String @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    status Status
+
+    relayLogs RelayLog[]
+
+    @@map("clients")
+}
+
+model RelayLog {
+    id String @id @default(uuid())
+    clientId String 
+    message String
+    meta Json
+    idempotencyKey String @unique
+    status RelayStatus @default(PENDING)
+    attempts Int @default(0)
+    lastAttempt DateTime?
+    createdAt DateTime @default(now())
+
+    client Client @relation(fields: [clientId], references: [id],onDelete: Cascade)
+    @@map("relay_logs")
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    INACTIVE
+    EXPIRED
+}
+enum Status {
+    ACTIVE
+    INACTIVE
+}
+
+enum DeviceHealthStatus {
+    OK
+    ERROR
+    WARN
+    DOWN
+}
+
+enum RelayStatus {
+    PENDING
+    SENT 
+    FAILED
+}
