@@ -1,12 +1,14 @@
 import fastify from "fastify";
 import HealthRoutes from "./routes/api/v1/health.js";
 import TelemetryRoutes from "./routes/api/v1/telemetry.js";
+import BillingRoutes from "./routes/api/v1/billing.js";
 import { logger } from "./logger.js";
 
 const server = fastify();
 
 server.register(HealthRoutes, { prefix: "api/v1" });
 server.register(TelemetryRoutes, { prefix: "api/v1/telemetry" });
+server.register(BillingRoutes, { prefix: "api/v1/billing" });
 
 server.listen(
   { port: Number(process.env.PORT) || 8080, host: "0.0.0.0" },
