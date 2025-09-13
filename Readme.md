@@ -27,7 +27,7 @@
 
 ```bash
 git clone <repo-url>
-cd sensorhub-backend
+cd digivikreta-assignment
 ```
 
 2. Install dependencies
