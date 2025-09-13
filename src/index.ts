@@ -5,9 +5,22 @@ import BillingRoutes from "./routes/api/v1/billing.js";
 import { logger } from "./logger.js";
 import RelayRoutes from "./routes/api/v1/relay.js";
 import MockRoutes from "./routes/mock/mock.js";
+import cors from "@fastify/cors";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 const server = fastify();
-
+server.register(cors);
+server.register(fastifyRateLimit, {
+  global: false,
+  errorResponseBuilder: (request: any, context: any) => {
+    return {
+      statusCode: 429,
+      error: "Too Many Requests",
+      message: `Rate limit exceeded. Retry in ${context.after}`,
+      retryAfter: context.after,
+    };
+  },
+});
 server.register(HealthRoutes, { prefix: "api/v1" });
 server.register(TelemetryRoutes, { prefix: "api/v1/telemetry" });
 server.register(RelayRoutes, { prefix: "api/v1/relay" });

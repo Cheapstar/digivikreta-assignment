@@ -1,0 +1,357 @@
+{
+  "info": {
+    "_postman_id": "34aa5a52-2fb8-4a60-a48c-f9094ce75127",
+    "name": "Digivikreta-Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40080955"
+  },
+  "item": [
+    {
+      "name": "/health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Telemetry-Ping (Idempotency Test)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [""],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"deviceId\": \"device-002\",\r\n  \"metric\": \"{{$randomAdjective}}\",\r\n  \"value\": \"{{$randomInt}}\",\r\n  \"status\": \"OK\",\r\n  \"ts\":  \"{{$randomDateRecent}}\",\r\n  \"eventId\": \"evt-8b29c1f9-3d7b-4d8c-94f0-2a3f7c5d9b6a\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/telemetry/ping",
+          "host": ["{{baseUrl}}"],
+          "path": ["telemetry", "ping"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Telemetry-Ping (Success)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "function randomHealthStatus() {\r",
+              "  const healthStatus = [\"OK\", \"WARN\", \"ERROR\", \"DOWN\"];\r",
+              "  return healthStatus[Math.floor(Math.random() * healthStatus.length)];\r",
+              "}\r",
+              "\r",
+              "pm.environment.set(\"randomHealthStatus\", randomHealthStatus());"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"deviceId\": \"device-002\",\r\n  \"metric\": \"{{$randomAdjective}}\",\r\n  \"value\": \"{{$randomInt}}\",\r\n  \"status\": \"{{randomHealthStatus}}\",\r\n  \"ts\":  \"{{$randomDateRecent}}\",\r\n  \"eventId\": \"{{$randomUUID}}\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/telemetry/ping",
+          "host": ["{{baseUrl}}"],
+          "path": ["telemetry", "ping"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Telemetry - Ping (Invalid Data)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"deviceId\": \"\",\r\n  \"metric\": \"temperature\",\r\n  \"value\": \"invalid\",\r\n  \"status\": \"online\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/telemetry/ping",
+          "host": ["{{baseUrl}}"],
+          "path": ["telemetry", "ping"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Billing - Subscribe (Success)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"deviceId\": \"device-002\",\r\n  \"planId\": \"{{$randomUUID}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/billing/subscribe",
+          "host": ["{{baseUrl}}"],
+          "path": ["billing", "subscribe"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Billing - Subscribe (Invalid Data)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"deviceId\": \"\",\r\n  \"metric\": \"temperature\",\r\n  \"value\": \"invalid\",\r\n  \"status\": \"online\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/billing/subscribe",
+          "host": ["{{baseUrl}}"],
+          "path": ["billing", "subscribe"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Relay - Publish (Invalid Key)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "invalid key",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"clientId\": \"test-client-001\",\r\n  \"message\": \"Test notification message\",\r\n  \"meta\": {\r\n    \"priority\": \"high\",\r\n    \"category\": \"alerts\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/relay/publish",
+          "host": ["{{baseUrl}}"],
+          "path": ["relay", "publish"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Relay - Publish (Success)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Set mock relay to succeed",
+              "pm.variables.set(\"mockRelayMode\", \"success\");"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Relay publish should return 202\", function() {",
+              "    pm.response.to.have.status(202);",
+              "});",
+              "",
+              "pm.test(\"Response should contain relay details\", function() {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.messageId).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"test-client-001\",\n  \"message\": \"Test notification message\",\n  \"meta\": {\n    \"priority\": \"high\",\n    \"category\": \"alerts\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/relay/publish",
+          "host": ["{{baseUrl}}"],
+          "path": ["relay", "publish"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Relay - Publish (Invalid Client)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Set mock relay to succeed",
+              "pm.variables.set(\"mockRelayMode\", \"success\");"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Relay publish should return 202\", function() {",
+              "    pm.response.to.have.status(202);",
+              "});",
+              "",
+              "pm.test(\"Response should contain relay details\", function() {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.messageId).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"test-client-try-try\",\n  \"message\": \"Test retry message\",\n  \"meta\": {\n    \"priority\": \"medium\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/relay/publish",
+          "host": ["{{baseUrl}}"],
+          "path": ["relay", "publish"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Relay - Publish",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"clientId\": \"test-client-001\",\r\n  \"message\": \"{{$randomLoremSentence}}\",\r\n  \"meta\": {\r\n    \"priority\": \"{{$randomAdjective}}\",\r\n    \"category\": \"{{$randomLastName}}\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/relay/publish",
+          "host": ["{{baseUrl}}"],
+          "path": ["relay", "publish"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "LOCAL_PATH",
+      "value": "http://localhost:8080/api/v1",
+      "type": "default"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1",
+      "type": "default"
+    },
+    {
+      "key": "apiKey",
+      "value": "sk-test-12345678901234567890123456789012",
+      "type": "default"
+    }
+  ]
+}

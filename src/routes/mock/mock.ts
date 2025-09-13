@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 
 export default function MockRoutes(server: FastifyInstance) {
   server.post("/mock-pay/charge", async (req, res) => {
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.3) {
       res.code(500);
       return { error: "Payment processing temporarily unavailable" };
     }
@@ -16,7 +16,7 @@ export default function MockRoutes(server: FastifyInstance) {
   });
 
   server.post("/mock-relay/receive", async (req, res) => {
-    if (Math.random() < 0.1) {
+    if (Math.random() < 0.3) {
       res.code(503);
       return { error: "Relay service temporarily unavailable" };
     }

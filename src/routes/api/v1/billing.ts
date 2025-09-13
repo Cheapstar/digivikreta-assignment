@@ -13,6 +13,11 @@ export default function BillingRoutes(server: FastifyInstance) {
   server.post("/subscribe", async (req, res) => {
     try {
       const data = subscriptionSchema.parse(req.body);
+      logger.info("Processing subscribe rewuest", {
+        deviceId: data.deviceId,
+        planId: data.planId,
+      });
+
       let providerRef = null;
 
       try {
@@ -24,13 +29,17 @@ export default function BillingRoutes(server: FastifyInstance) {
             amount: 99.99,
           }
         );
+
+        logger.info("Payment Processed Successfully", {
+          ...response.data,
+        });
+
         providerRef = response.data.transactionId;
       } catch (error: any) {
-        server.log.error({
-          requestId: req.headers["x-req-id"],
-          error: error.message,
-          action: "payment_failed",
+        logger.error("Payment Failed", {
           deviceId: data.deviceId,
+          planId: data.planId,
+          error: error.message,
         });
 
         res.code(402);
@@ -43,7 +52,7 @@ export default function BillingRoutes(server: FastifyInstance) {
 
       // create subscription
       const startDate = new Date();
-      const endDate = new Date(startDate.getTime() + 365 * 24 * 60 * 60 * 1000); // 1 year
+      const endDate = new Date(startDate.getTime() + 365 * 24 * 60 * 60 * 1000);
 
       const subscription = await prisma.subscription.create({
         data: {
@@ -66,6 +75,10 @@ export default function BillingRoutes(server: FastifyInstance) {
         action: "subscription_created",
       });
 
+      logger.info("Subscription Process Successfully Done!!", {
+        deviceId: data.deviceId,
+        planId: data.planId,
+      });
       return {
         message: "Subscription created successfully",
         subscriptionId: subscription.id,
@@ -74,21 +87,25 @@ export default function BillingRoutes(server: FastifyInstance) {
         requestId: req.headers["x-req-id"],
       };
     } catch (error: any) {
-      server.log.error({
-        requestId: req.headers["x-req-id"],
-        error: error.message,
-        action: "subscription_error",
-      });
-
       if (error instanceof z.ZodError) {
+        logger.error("Invalid Request Data", {
+          requestId: req.headers["x-req-id"],
+          error: error.issues,
+          action: "subscription_error",
+        });
         res.code(400);
         return {
           error: "Invalid req data",
-          details: error,
+          details: error.issues,
           requestId: req.headers["x-req-id"],
         };
       }
 
+      logger.error("Subscription Process Failed", {
+        requestId: req.headers["x-req-id"],
+        error: error.message,
+        action: "subscription_error",
+      });
       res.code(500);
       return {
         error: "Internal server error",

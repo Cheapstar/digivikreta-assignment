@@ -1,12 +1,17 @@
 import { FastifyInstance } from "fastify";
 import { logger } from "../../../logger.js";
+import { prisma } from "../../../db/client.js";
 
-export default function HealthRoutes(server: FastifyInstance) {
-  server.get("/health", (req, res) => {
+export default async function HealthRoutes(server: FastifyInstance) {
+  server.get("/health", async (req, res) => {
     logger.info("Incoming Request , Checking Health");
 
-    return {
-      message: "EveryNyne is Fine",
-    };
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      return { status: "Ok", timestamp: new Date().toISOString() };
+    } catch (error) {
+      res.code(503);
+      return { status: "Error", error: "Database connection failed" };
+    }
   });
 }

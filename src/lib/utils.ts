@@ -1,4 +1,5 @@
 import { prisma } from "../db/client.js";
+import { logger } from "../logger.js";
 
 export async function isDeviceActive(deviceId: string) {
   let device = await prisma.device.findFirst({
@@ -42,6 +43,7 @@ export async function retryWithBackOff(
 ) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
+      logger.info(`Attempt ${attempt}`);
       return await fn();
     } catch (error: any) {
       if (

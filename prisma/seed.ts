@@ -2,6 +2,7 @@ import { prisma } from "../src/db/client.js";
 
 async function main() {
   console.log("Seeding database...");
+
   const device1 = await prisma.device.create({
     data: {
       id: "device-001",
