@@ -2,6 +2,7 @@ import fastify from "fastify";
 import HealthRoutes from "./routes/api/v1/health.route.js";
 import TelemetryRoutes from "./routes/api/v1/telemetry.route.js";
 import BillingRoutes from "./routes/api/v1/billing.route.js";
+import { logger } from "./logger.js";
 
 const server = fastify();
 
@@ -17,6 +18,6 @@ server.listen(
       process.exit(1);
     }
 
-    console.log(`Server is Listening at Port : ${address}`);
+    logger.info(`Server is Listening at Port : ${address}`);
   }
 );
