@@ -7,7 +7,7 @@
   },
   "item": [
     {
-      "name": "/health",
+      "name": "Health",
       "request": {
         "method": "GET",
         "header": [],
@@ -332,6 +332,19 @@
           "raw": "{{baseUrl}}/relay/publish",
           "host": ["{{baseUrl}}"],
           "path": ["relay", "publish"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ready",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/ready",
+          "host": ["{{baseUrl}}"],
+          "path": ["ready"]
         }
       },
       "response": []
