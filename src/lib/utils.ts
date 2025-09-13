@@ -1,5 +1,5 @@
 import { prisma } from "../db/client.js";
-import { logger } from "../logger.js";
+import { logger } from "./logger.js";
 
 export async function isDeviceActive(deviceId: string) {
   let device = await prisma.device.findFirst({

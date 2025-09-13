@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import z from "zod";
 import { isDeviceActive, updateDeviceSnapShot } from "../../../lib/utils.js";
 import { prisma } from "../../../db/client.js";
-import { logger } from "../../../logger.js";
+import { logger } from "../../../lib/logger.js";
 
 const pingSchema = z.object({
   deviceId: z.string().min(1),

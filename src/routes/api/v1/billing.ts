@@ -3,7 +3,7 @@ import z from "zod";
 import { updateDeviceSnapShot } from "../../../lib/utils.js";
 import axios from "axios";
 import { prisma } from "../../../db/client.js";
-import { logger } from "../../../logger.js";
+import { logger } from "../../../lib/logger.js";
 const subscriptionSchema = z.object({
   deviceId: z.string().min(1),
   planId: z.string().min(1),

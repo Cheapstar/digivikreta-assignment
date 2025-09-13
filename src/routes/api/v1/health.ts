@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { logger } from "../../../logger.js";
+import { logger } from "../../../lib/logger.js";
 import { prisma } from "../../../db/client.js";
 
 export default async function HealthRoutes(server: FastifyInstance) {

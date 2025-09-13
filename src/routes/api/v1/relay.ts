@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { prisma } from "../../../db/client.js";
 import axios from "axios";
 import { retryWithBackOff } from "../../../lib/utils.js";
-import { logger } from "../../../logger.js";
+import { logger } from "../../../lib/logger.js";
 import z from "zod";
 
 const relaySchema = z.object({

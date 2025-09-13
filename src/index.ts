@@ -2,7 +2,7 @@ import fastify from "fastify";
 import HealthRoutes from "./routes/api/v1/health.js";
 import TelemetryRoutes from "./routes/api/v1/telemetry.js";
 import BillingRoutes from "./routes/api/v1/billing.js";
-import { logger } from "./logger.js";
+import { logger } from "./lib/logger.js";
 import RelayRoutes from "./routes/api/v1/relay.js";
 import MockRoutes from "./routes/mock/mock.js";
 import cors from "@fastify/cors";
