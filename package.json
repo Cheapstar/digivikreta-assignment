@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:seed": "node --loader ts-node/esm prisma/seed.ts"
+    "db:seed": "node --loader ts-node/esm prisma/seed.ts",
+    "dev": "nodemon --watch src --exec \"node --loader ts-node/esm src/index.ts\""
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.3",
+    "nodemon": "^3.1.10",
     "prisma": "^6.16.1",
     "typescript": "^5.9.2"
   }
