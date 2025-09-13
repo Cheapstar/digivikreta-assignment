@@ -26,7 +26,7 @@
 1. Clone the repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Cheapstar/digivikreta-assignment.git
 cd digivikreta-assignment
 ```
 
