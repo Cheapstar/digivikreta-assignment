@@ -99,4 +99,4 @@ The service will be available at `http://localhost:8080`
   - Rate limited: 50 requests/minute
   - Requires API key authentication
   - Retry logic with exponential backoff
-  - Idempotent using `x-idempotency-key` header
+  - Idempotent using `x-api-key` header
