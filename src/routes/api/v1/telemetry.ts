@@ -37,7 +37,7 @@ export default async function TelemetryRoutes(server: FastifyInstance) {
         });
 
         // check if the device is active
-        const deviceActive = isDeviceActive(data.deviceId);
+        const deviceActive = await isDeviceActive(data.deviceId);
         if (!deviceActive) {
           logger.error("Rejected ping from inactive device", {
             deviceId: data.deviceId,
